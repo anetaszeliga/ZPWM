@@ -1,8 +1,24 @@
 ﻿#include <Windows.h>
 #include "res.h"
-int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow) 
+INT_PTR CALLBACK DialogProc (HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-  HWND hwndMainWindow = CreateDialog(hinstance, MAKEINTRESOURCE(IDD_MAINVIEW),NULL,NULL);
+switch(uMsg)
+{
+case WM_LBUTTONDOWN:
+    CHAR szText[200];
+    wsprintf(szText, "Kliknales myszka x=%d,y=%d",LOWORD(lParam),HIWORD(lParam));
+    MessageBox(hwndDlg,szText, TEXT("Klikniecie"),MB_OK);
+    return TRUE;
+case WM_CLOSE:
+  DestroyWindow(hwndDlg);
+  PostQuitMessage(0);
+  return TRUE;
+}
+return FALSE;
+}
+  int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow) 
+{
+  HWND hwndMainWindow = CreateDialog(hinstance, MAKEINTRESOURCE(IDD_MAINVIEW),NULL,DialogProc);
   ShowWindow(hwndMainWindow, iCmdShow);
 
   MSG msg={};
